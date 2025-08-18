@@ -22,14 +22,51 @@
       margin-bottom: 20px;
       text-shadow: 2px 2px 4px #000;
     }
-    #countdown {
+    #countdown-box {
+      display: inline-block;
       font-size: 2em;
       margin-top: 20px;
-      padding: 10px 20px;
-      border: 2px solid white;
-      border-radius: 15px;
+      padding: 20px 40px;
+      border: 3px solid white;
+      border-radius: 20px;
       background: rgba(255, 255, 255, 0.2);
       box-shadow: 0px 0px 15px white;
+    }
+    #popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      color: #ff1493;
+      padding: 40px;
+      border-radius: 25px;
+      box-shadow: 0px 0px 30px rgba(0,0,0,0.5);
+      font-size: 2em;
+      text-align: center;
+      z-index: 1000;
+      animation: fadeIn 2s ease-in-out forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -40%); }
+      to { opacity: 1; transform: translate(-50%, -50%); }
+    }
+    #unlock-btn {
+      margin-top: 30px;
+      padding: 15px 30px;
+      font-size: 1.2em;
+      border: none;
+      border-radius: 20px;
+      background: #ff1493;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0px 0px 10px rgba(0,0,0,0.3);
+      transition: transform 0.2s;
+    }
+    #unlock-btn:hover {
+      transform: scale(1.05);
+      background: #ff007f;
     }
     canvas {
       position: fixed;
@@ -41,21 +78,40 @@
 </head>
 <body>
   <h1>🎂 Happy Birthday Cutie Pie 💖</h1>
-  <div id="countdown"></div>
+  <div id="countdown-box">
+    <div id="countdown"></div>
+  </div>
+
+  <button id="unlock-btn" style="display:none;">🎁 Click to Unlock Surprise 🎁</button>
+
+  <div id="popup">
+    💖 You are my life, my everything 💖 <br>
+    🎂 Happy Birthday Cutie Pie 🎂 <br>
+    🌹 I love you forever 🌹
+  </div>
+
+  <!-- Background Music -->
+  <audio id="birthdaySong" src="music.mp3"></audio>
 
   <canvas id="confetti"></canvas>
 
   <script>
-    // Countdown Timer
+    const countdownBox = document.getElementById("countdown-box");
     const countdown = document.getElementById("countdown");
-    const targetDate = new Date("Aug 20, 2025 12:00:00").getTime();
+    const popup = document.getElementById("popup");
+    const song = document.getElementById("birthdaySong");
+    const unlockBtn = document.getElementById("unlock-btn");
+
+    // Target time: 19 Aug 11:59:59 PM
+    const targetDate = new Date("Aug 19, 2025 23:59:59").getTime();
 
     function updateCountdown() {
       const now = new Date().getTime();
       const distance = targetDate - now;
 
       if (distance < 0) {
-        countdown.innerHTML = "🎉 It's Your Special Day! 🎉";
+        countdownBox.style.display = "none";
+        unlockBtn.style.display = "inline-block"; // show button after countdown
         return;
       }
 
@@ -67,6 +123,13 @@
       countdown.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
     }
     setInterval(updateCountdown, 1000);
+
+    // When user clicks unlock button
+    unlockBtn.addEventListener("click", () => {
+      unlockBtn.style.display = "none";
+      popup.style.display = "block";
+      song.play();
+    });
 
     // Confetti Effect
     const canvas = document.getElementById("confetti");
