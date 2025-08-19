@@ -9,7 +9,7 @@
       padding: 0;
       background: #0d0d0d;
       color: white;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
       overflow: hidden;
       text-align: center;
     }
@@ -22,22 +22,22 @@
     }
 
     #countdown {
-      margin: 10px 0;
-      font-size: 1.5em;
+      margin: 20px 0;
+      font-size: 2em;
       color: #ffccff;
     }
 
-    /* Gift box */
+    /* Gift Box */
     .gift-box {
       width: 180px;
       height: 180px;
       background: #ff66b2;
-      margin: 40px auto;
+      margin: 30px auto;
       position: relative;
-      cursor: pointer;
       border-radius: 10px;
       box-shadow: 0 0 20px #ff66b2;
-      transition: transform 1s ease;
+      display: none;
+      cursor: pointer;
     }
     .ribbon {
       width: 20px;
@@ -52,7 +52,7 @@
       transform: rotateX(20deg) scale(0.9);
     }
     .gift-box.open .ribbon {
-      transform: translateX(-200px);
+      transform: translateX(-220px);
     }
 
     /* Heart */
@@ -109,7 +109,7 @@
       to { opacity: 1; }
     }
 
-    /* Floating colorful circles */
+    /* Background circles */
     .circle {
       position: absolute;
       border-radius: 50%;
@@ -127,56 +127,71 @@
   <div id="countdown"></div>
 
   <!-- Gift box -->
-  <div class="gift-box" onclick="openGift()">
+  <div class="gift-box" id="giftBox">
     <div class="ribbon"></div>
     <div class="heart"></div>
   </div>
 
   <!-- Poem -->
   <div id="poem">
-    On this day the stars align,<br>
-    To celebrate that you are mine,<br>
-    Your beauty shines, both bright and true,<br>
-    The world feels warmer because of you.<br><br>
+On this day the stars align,
+To celebrate that you are mine,
+Your beauty shines, both bright and true,
+The world feels warmer because of you.
 
-    Your gentle nature, so calm and so sweet,<br>
-    Makes every moment feel complete,<br>
-    With every smile, with every care,<br>
-    You paint love’s colors everywhere.<br><br>
+Your gentle nature, so calm and so sweet,
+Makes every moment feel complete,
+With every smile, with every care,
+You paint love’s colors everywhere.
 
-    Your beauty shines, both so bright and so true,<br>
-    The skies seem clearer because of you,<br>
-    A gentle heart, a caring soul,<br>
-    You make my half feel wholly whole.<br><br>
+Your beauty shines, both so bright and so true,
+The skies seem clearer because of you,
+A gentle heart, a caring soul,
+You make my half feel wholly whole.
 
-    Your laughter’s music, so soft and so sweet,<br>
-    It makes my every day complete,<br>
-    With every smile, with every care,<br>
-    You paint love’s colors everywhere.<br><br>
+Your laughter’s music, so soft and so sweet,
+It makes my every day complete,
+With every smile, with every care,
+You paint love’s colors everywhere.
 
-    So on your birthday, here’s my part,<br>
-    A wish that flows straight from my heart,<br>
-    May joy surround you, far and near,<br>
-    Not just today, but all the year,<br>
-    Forever you’ll mean the world to me.<br><br>
+So on your birthday, here’s my part,
+A wish that flows straight from my heart,
+May joy surround you, far and near,
+Not just today, but all the year,
+Forever you’ll mean the world to me.
 
-    Forever blessed, I’ll always be,<br>
-    For love like this was meant for me,<br>
-    And as the candles softly glow,<br>
-    My endless love for you will grow. 💖
+Forever blessed, I’ll always be,
+For love like this was meant for me,
+And as the candles softly glow,
+My endless love for you will grow. 💖
   </div>
 
+  <audio id="birthdaySong" src="45040.mp3"></audio>
+
   <script>
-    // Countdown
     const countdownEl = document.getElementById('countdown');
+    const giftBox = document.getElementById('giftBox');
+    const poem = document.getElementById('poem');
+    const audio = document.getElementById('birthdaySong');
+
     const targetDate = new Date("August 19, 2025 23:59:59").getTime();
 
-    setInterval(() => {
+    const timer = setInterval(() => {
       const now = new Date().getTime();
       const diff = targetDate - now;
 
       if (diff <= 0) {
-        countdownEl.innerHTML = "🎂 It's Birthday Time! 🎉";
+        clearInterval(timer);
+        countdownEl.innerHTML = "🎉 It's Birthday Time! 🎉";
+        giftBox.style.display = "block";
+
+        // Auto-open after 2 sec
+        setTimeout(() => {
+          giftBox.classList.add('open');
+          poem.style.display = 'block';
+          audio.play();
+        }, 2000);
+
       } else {
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
         const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -186,17 +201,9 @@
       }
     }, 1000);
 
-    // Gift box logic
-    function openGift() {
-      document.querySelector('.gift-box').classList.add('open');
-      setTimeout(() => {
-        document.getElementById('poem').style.display = 'block';
-      }, 1200);
-    }
-
-    // Floating colorful circles
+    // Background circles
     function createCircles() {
-      for (let i = 0; i < 25; i++) {
+      for (let i = 0; i < 30; i++) {
         let circle = document.createElement('div');
         circle.classList.add('circle');
         let size = Math.random() * 30 + 15;
