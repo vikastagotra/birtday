@@ -2,137 +2,213 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Birthday Countdown</title>
+  <title>Happy Birthday Cutie Putie Pie</title>
   <style>
     body {
       margin: 0;
       padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background: #ffe6f0;
-      font-family: Arial, sans-serif;
-      flex-direction: column;
+      background: #0d0d0d;
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden;
+      text-align: center;
     }
 
-    .countdown {
-      font-size: 2rem;
-      margin-bottom: 20px;
-      font-weight: bold;
-      color: #ff3366;
+    h1 {
+      font-size: 2.5em;
+      margin-top: 20px;
+      color: #ff66b2;
+      text-shadow: 0 0 10px #ff3399;
     }
 
+    #countdown {
+      margin: 10px 0;
+      font-size: 1.5em;
+      color: #ffccff;
+    }
+
+    /* Gift box */
     .gift-box {
-      width: 150px;
-      height: 150px;
-      background: #ff6699;
+      width: 180px;
+      height: 180px;
+      background: #ff66b2;
+      margin: 40px auto;
       position: relative;
-      border-radius: 10px;
       cursor: pointer;
-      transition: transform 0.6s ease-in-out;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: visible;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #ff66b2;
+      transition: transform 1s ease;
     }
-
     .ribbon {
-      position: absolute;
-      background: #fff;
-    }
-
-    .ribbon.vertical {
       width: 20px;
-      height: 100%;
-      left: 50%;
-      transform: translateX(-50%);
+      height: 180px;
+      background: #fff;
+      position: absolute;
+      left: 80px;
+      top: 0;
+      transition: transform 1s ease;
+    }
+    .gift-box.open {
+      transform: rotateX(20deg) scale(0.9);
+    }
+    .gift-box.open .ribbon {
+      transform: translateX(-200px);
     }
 
-    .ribbon.horizontal {
-      height: 20px;
-      width: 100%;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-
-    /* Heart (hidden initially) */
+    /* Heart */
     .heart {
       position: absolute;
-      bottom: -60px;
-      font-size: 2.5rem;
-      color: red;
-      opacity: 0;
-      transform: scale(0.5);
-      transition: all 0.8s ease-in-out;
+      top: 50%;
+      left: 50%;
+      width: 60px;
+      height: 60px;
+      background: red;
+      transform: rotate(-45deg) scale(0);
+      animation: none;
+    }
+    .heart::before, .heart::after {
+      content: "";
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background: red;
+      border-radius: 50%;
+    }
+    .heart::before {
+      top: -30px;
+      left: 0;
+    }
+    .heart::after {
+      left: 30px;
+      top: 0;
+    }
+    .gift-box.open .heart {
+      animation: pop 1s forwards;
+    }
+    @keyframes pop {
+      to { transform: rotate(-45deg) scale(1); }
     }
 
-    /* Opened box animation */
-    .gift-box.opened {
-      transform: scale(1.1);
+    /* Poem */
+    #poem {
+      max-width: 700px;
+      margin: 20px auto;
+      padding: 20px;
+      font-size: 1.1em;
+      line-height: 1.6em;
+      color: #fff;
+      display: none;
+      white-space: pre-line;
+      background: rgba(255, 105, 180, 0.1);
+      border-radius: 15px;
+      box-shadow: 0 0 15px #ff3399;
+      animation: fadeIn 3s ease forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
-    .gift-box.opened .ribbon.vertical {
-      transform: translateX(-200%);
-      opacity: 0;
+    /* Floating colorful circles */
+    .circle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.6;
+      animation: floatUp 15s linear infinite;
     }
-
-    .gift-box.opened .ribbon.horizontal {
-      transform: translateY(-200%);
-      opacity: 0;
-    }
-
-    .gift-box.opened .heart {
-      opacity: 1;
-      transform: scale(1) translateY(-10px);
+    @keyframes floatUp {
+      from { transform: translateY(100vh) scale(0.5); }
+      to { transform: translateY(-10vh) scale(1.2); }
     }
   </style>
 </head>
 <body>
-  <div class="countdown" id="countdown"></div>
-  <div class="gift-box" id="giftBox">
-    <div class="ribbon vertical"></div>
-    <div class="ribbon horizontal"></div>
-    <div class="heart">❤️</div>
+  <h1>🎉 Happy Birthday Cutie Putie Pie 💕</h1>
+  <div id="countdown"></div>
+
+  <!-- Gift box -->
+  <div class="gift-box" onclick="openGift()">
+    <div class="ribbon"></div>
+    <div class="heart"></div>
   </div>
 
-  <audio id="bgMusic" src="45040.mp3"></audio>
+  <!-- Poem -->
+  <div id="poem">
+    On this day the stars align,<br>
+    To celebrate that you are mine,<br>
+    Your beauty shines, both bright and true,<br>
+    The world feels warmer because of you.<br><br>
+
+    Your gentle nature, so calm and so sweet,<br>
+    Makes every moment feel complete,<br>
+    With every smile, with every care,<br>
+    You paint love’s colors everywhere.<br><br>
+
+    Your beauty shines, both so bright and so true,<br>
+    The skies seem clearer because of you,<br>
+    A gentle heart, a caring soul,<br>
+    You make my half feel wholly whole.<br><br>
+
+    Your laughter’s music, so soft and so sweet,<br>
+    It makes my every day complete,<br>
+    With every smile, with every care,<br>
+    You paint love’s colors everywhere.<br><br>
+
+    So on your birthday, here’s my part,<br>
+    A wish that flows straight from my heart,<br>
+    May joy surround you, far and near,<br>
+    Not just today, but all the year,<br>
+    Forever you’ll mean the world to me.<br><br>
+
+    Forever blessed, I’ll always be,<br>
+    For love like this was meant for me,<br>
+    And as the candles softly glow,<br>
+    My endless love for you will grow. 💖
+  </div>
 
   <script>
-    // Countdown Timer
-    const countdownEl = document.getElementById("countdown");
-    const targetDate = new Date("Aug 20, 2025 22:11:00").getTime();
+    // Countdown
+    const countdownEl = document.getElementById('countdown');
+    const targetDate = new Date("August 19, 2025 23:59:59").getTime();
 
-    function updateCountdown() {
+    setInterval(() => {
       const now = new Date().getTime();
-      const distance = targetDate - now;
+      const diff = targetDate - now;
 
-      if (distance < 0) {
-        countdownEl.innerHTML = "🎉 Time’s up! Open your gift!";
-        return;
+      if (diff <= 0) {
+        countdownEl.innerHTML = "🎂 It's Birthday Time! 🎉";
+      } else {
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        countdownEl.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
       }
+    }, 1000);
 
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-      countdownEl.innerHTML =
-        days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+    // Gift box logic
+    function openGift() {
+      document.querySelector('.gift-box').classList.add('open');
+      setTimeout(() => {
+        document.getElementById('poem').style.display = 'block';
+      }, 1200);
     }
 
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
-
-    // Gift Box Opening
-    const giftBox = document.getElementById("giftBox");
-    const bgMusic = document.getElementById("bgMusic");
-
-    giftBox.addEventListener("click", () => {
-      giftBox.classList.add("opened");
-      bgMusic.play();
-    });
+    // Floating colorful circles
+    function createCircles() {
+      for (let i = 0; i < 25; i++) {
+        let circle = document.createElement('div');
+        circle.classList.add('circle');
+        let size = Math.random() * 30 + 15;
+        circle.style.width = `${size}px`;
+        circle.style.height = `${size}px`;
+        circle.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+        circle.style.left = `${Math.random() * 100}vw`;
+        circle.style.animationDuration = `${10 + Math.random() * 10}s`;
+        document.body.appendChild(circle);
+      }
+    }
+    createCircles();
   </script>
 </body>
 </html>
