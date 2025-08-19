@@ -2,180 +2,140 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Happy Birthday Cutie Pie</title>
+  <title>Special Surprise</title>
   <style>
     body {
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(135deg, #ffb6c1, #ff69b4);
-      font-family: 'Comic Sans MS', cursive, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #ffdde1, #ee9ca7);
       text-align: center;
-      color: white;
       height: 100vh;
+      margin: 0;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
     }
-    h1 {
-      font-size: 3em;
-      margin-bottom: 20px;
-      text-shadow: 2px 2px 4px #000;
-    }
-    #countdown-box {
-      display: inline-block;
-      font-size: 2em;
-      margin-top: 20px;
-      padding: 20px 40px;
-      border: 3px solid white;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.2);
-      box-shadow: 0px 0px 15px white;
-    }
-    #popup {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+
+    .container {
       background: white;
-      color: #ff1493;
       padding: 40px;
-      border-radius: 25px;
-      box-shadow: 0px 0px 30px rgba(0,0,0,0.5);
-      font-size: 2em;
-      text-align: center;
-      z-index: 1000;
-      animation: fadeIn 2s ease-in-out forwards;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translate(-50%, -40%); }
-      to { opacity: 1; transform: translate(-50%, -50%); }
-    }
-    #unlock-btn {
-      margin-top: 30px;
-      padding: 15px 30px;
-      font-size: 1.2em;
-      border: none;
       border-radius: 20px;
-      background: #ff1493;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      max-width: 600px;
+    }
+
+    h1 {
+      font-size: 28px;
+      color: #d63384;
+    }
+
+    #timer {
+      font-size: 40px;
+      margin: 20px 0;
+      color: #333;
+      font-weight: bold;
+    }
+
+    #openBtn {
+      display: none;
+      padding: 12px 25px;
+      font-size: 18px;
+      background: #d63384;
       color: white;
+      border: none;
+      border-radius: 10px;
       cursor: pointer;
-      box-shadow: 0px 0px 10px rgba(0,0,0,0.3);
-      transition: transform 0.2s;
+      transition: 0.3s;
     }
-    #unlock-btn:hover {
-      transform: scale(1.05);
-      background: #ff007f;
+
+    #openBtn:hover {
+      background: #b62d6f;
     }
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      pointer-events: none;
+
+    #message {
+      display: none;
+      font-size: 18px;
+      margin-top: 20px;
+      line-height: 1.6;
+      color: #444;
+      white-space: pre-line;
     }
   </style>
 </head>
 <body>
-  <h1>🎂 Happy Birthday Cutie Pie 💖</h1>
-  <div id="countdown-box">
-    <div id="countdown"></div>
+
+  <div class="container">
+    <h1>Countdown to the Special Moment</h1>
+    <div id="timer">Loading...</div>
+    <button id="openBtn">Tap to Open</button>
+    <div id="message"></div>
+    <audio id="bgMusic" src="45040.mp3"></audio>
   </div>
-
-  <button id="unlock-btn" style="display:none;">🎁 Click to Unlock Surprise 🎁</button>
-
-  <div id="popup">
-    💖 You are my life, my everything 💖 <br>
-    🎂 Happy Birthday Cutie Pie 🎂 <br>
-    🌹 I love you forever 🌹
-  </div>
-
-  <!-- Background Music -->
-  <audio id="birthdaySong" src="music.mp3"></audio>
-
-  <canvas id="confetti"></canvas>
 
   <script>
-    const countdownBox = document.getElementById("countdown-box");
-    const countdown = document.getElementById("countdown");
-    const popup = document.getElementById("popup");
-    const song = document.getElementById("birthdaySong");
-    const unlockBtn = document.getElementById("unlock-btn");
+    // Set target date and time (19 Aug, 2025, 10:11 PM)
+    const targetDate = new Date("Aug 19, 2025 22:11:00").getTime();
 
-    // Target time: 19 Aug 11:59:59 PM
-    const targetDate = new Date("Aug 19, 2025 23:59:59").getTime();
+    const timerElement = document.getElementById("timer");
+    const openBtn = document.getElementById("openBtn");
+    const messageElement = document.getElementById("message");
+    const bgMusic = document.getElementById("bgMusic");
 
-    function updateCountdown() {
+    const countdown = setInterval(() => {
       const now = new Date().getTime();
       const distance = targetDate - now;
 
-      if (distance < 0) {
-        countdownBox.style.display = "none";
-        unlockBtn.style.display = "inline-block"; // show button after countdown
-        return;
+      if (distance > 0) {
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        timerElement.innerHTML =
+          `${days}d ${hours}h ${minutes}m ${seconds}s`;
+      } else {
+        clearInterval(countdown);
+        timerElement.innerHTML = "The moment is here!";
+        openBtn.style.display = "inline-block";
       }
+    }, 1000);
 
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    // On tap -> show message + play music
+    openBtn.addEventListener("click", () => {
+      messageElement.style.display = "block";
+      messageElement.innerText = 
+`On this day the stars align,
+To celebrate that you are mine,
+Your beauty shines, both bright and true,
+The world feels warmer because of you.
 
-      countdown.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-    }
-    setInterval(updateCountdown, 1000);
+Your gentle nature, so calm and so sweet,
+Makes every moment feel complete,
+With every smile, with every care,
+You paint love’s colors everywhere.
 
-    // When user clicks unlock button
-    unlockBtn.addEventListener("click", () => {
-      unlockBtn.style.display = "none";
-      popup.style.display = "block";
-      song.play();
-    });
+Your beauty shines, both so bright and so true,
+The skies seem clearer because of you,
+A gentle heart, a caring soul,
+You make my half feel wholly whole.
 
-    // Confetti Effect
-    const canvas = document.getElementById("confetti");
-    const ctx = canvas.getContext("2d");
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+Your laughter’s music, so soft and so sweet,
+It makes my every day complete,
+With every smile, with every care,
+You paint love’s colors everywhere.
 
-    const confetti = [];
-    for (let i = 0; i < 200; i++) {
-      confetti.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height - canvas.height,
-        r: Math.random() * 6 + 4,
-        d: Math.random() * 20 + 10,
-        color: `hsl(${Math.random() * 360}, 100%, 50%)`,
-        tilt: Math.random() * 10 - 10
-      });
-    }
+So on your birthday, here’s my part,
+A wish that flows straight from my heart,
+May joy surround you, far and near,
+Not just today, but all the year,
+Forever you’ll mean the world to me.
 
-    function drawConfetti() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      confetti.forEach(p => {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2, false);
-        ctx.fillStyle = p.color;
-        ctx.fill();
-      });
-      updateConfetti();
-    }
+Forever blessed, I’ll always be,
+For love like this was meant for me,
+And as the candles softly glow,
+My endless love for you will grow`;
 
-    function updateConfetti() {
-      confetti.forEach(p => {
-        p.y += Math.cos(p.d) + 1 + p.r / 2;
-        p.x += Math.sin(p.d);
-        if (p.y > canvas.height) {
-          p.x = Math.random() * canvas.width;
-          p.y = -10;
-        }
-      });
-    }
-
-    setInterval(drawConfetti, 20);
-
-    window.addEventListener("resize", () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      bgMusic.play();
+      openBtn.style.display = "none";
     });
   </script>
 </body>
