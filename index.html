@@ -15,12 +15,41 @@
       align-items: center;
     }
 
+    /* Gift box style */
     .container {
-      background: white;
+      background: #fff;
       padding: 40px;
       border-radius: 20px;
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
       max-width: 600px;
+      position: relative;
+      border: 5px solid #d63384;
+    }
+
+    /* Ribbon effect */
+    .container::before,
+    .container::after {
+      content: "";
+      position: absolute;
+      background: #d63384;
+    }
+
+    /* Vertical ribbon */
+    .container::before {
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 100%;
+    }
+
+    /* Horizontal ribbon */
+    .container::after {
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      height: 20px;
+      width: 100%;
     }
 
     h1 {
@@ -45,6 +74,8 @@
       border-radius: 10px;
       cursor: pointer;
       transition: 0.3s;
+      z-index: 1;
+      position: relative;
     }
 
     #openBtn:hover {
@@ -64,7 +95,7 @@
 <body>
 
   <div class="container">
-    <h1>Countdown to the Special Moment</h1>
+    <h1>Countdown to the Special Moment 🎁</h1>
     <div id="timer">Loading...</div>
     <button id="openBtn">Tap to Open</button>
     <div id="message"></div>
@@ -72,8 +103,14 @@
   </div>
 
   <script>
-    // Set target date and time (19 Aug, 2025, 10:11 PM)
-    const targetDate = new Date("Aug 19, 2025 22:18:00").getTime();
+    // ⚡ For testing, set countdown just 10 seconds from now
+    const testMode = true; // change to false for real date
+    let targetDate;
+    if (testMode) {
+      targetDate = new Date().getTime() + 10000; // 10 seconds from now
+    } else {
+      targetDate = new Date("Aug 19, 2025 22:11:00").getTime();
+    }
 
     const timerElement = document.getElementById("timer");
     const openBtn = document.getElementById("openBtn");
