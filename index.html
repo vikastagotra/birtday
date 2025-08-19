@@ -2,177 +2,136 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Special Surprise</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Birthday Countdown</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #ffdde1, #ee9ca7);
-      text-align: center;
-      height: 100vh;
       margin: 0;
+      padding: 0;
       display: flex;
       justify-content: center;
       align-items: center;
+      height: 100vh;
+      background: #ffe6f0;
+      font-family: Arial, sans-serif;
+      flex-direction: column;
     }
 
-    /* Gift box style */
-    .container {
-      background: #fff;
-      padding: 40px;
-      border-radius: 20px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-      max-width: 600px;
-      position: relative;
-      border: 5px solid #d63384;
-    }
-
-    /* Ribbon effect */
-    .container::before,
-    .container::after {
-      content: "";
-      position: absolute;
-      background: #d63384;
-    }
-
-    /* Vertical ribbon */
-    .container::before {
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 20px;
-      height: 100%;
-    }
-
-    /* Horizontal ribbon */
-    .container::after {
-      top: 50%;
-      left: 0;
-      transform: translateY(-50%);
-      height: 20px;
-      width: 100%;
-    }
-
-    h1 {
-      font-size: 28px;
-      color: #d63384;
-    }
-
-    #timer {
-      font-size: 40px;
-      margin: 20px 0;
-      color: #333;
+    .countdown {
+      font-size: 2rem;
+      margin-bottom: 20px;
       font-weight: bold;
+      color: #ff3366;
     }
 
-    #openBtn {
-      display: none;
-      padding: 12px 25px;
-      font-size: 18px;
-      background: #d63384;
-      color: white;
-      border: none;
+    .gift-box {
+      width: 150px;
+      height: 150px;
+      background: #ff6699;
+      position: relative;
       border-radius: 10px;
       cursor: pointer;
-      transition: 0.3s;
-      z-index: 1;
-      position: relative;
+      transition: transform 0.6s ease-in-out;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: visible;
     }
 
-    #openBtn:hover {
-      background: #b62d6f;
+    .ribbon {
+      position: absolute;
+      background: #fff;
     }
 
-    #message {
-      display: none;
-      font-size: 18px;
-      margin-top: 20px;
-      line-height: 1.6;
-      color: #444;
-      white-space: pre-line;
+    .ribbon.vertical {
+      width: 20px;
+      height: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .ribbon.horizontal {
+      height: 20px;
+      width: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    /* Heart (hidden initially) */
+    .heart {
+      position: absolute;
+      bottom: -60px;
+      font-size: 2.5rem;
+      color: red;
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all 0.8s ease-in-out;
+    }
+
+    /* Opened box animation */
+    .gift-box.opened {
+      transform: scale(1.1);
+    }
+
+    .gift-box.opened .ribbon.vertical {
+      transform: translateX(-200%);
+      opacity: 0;
+    }
+
+    .gift-box.opened .ribbon.horizontal {
+      transform: translateY(-200%);
+      opacity: 0;
+    }
+
+    .gift-box.opened .heart {
+      opacity: 1;
+      transform: scale(1) translateY(-10px);
     }
   </style>
 </head>
 <body>
-
-  <div class="container">
-    <h1>Countdown to the Special Moment 🎁</h1>
-    <div id="timer">Loading...</div>
-    <button id="openBtn">Tap to Open</button>
-    <div id="message"></div>
-    <audio id="bgMusic" src="45040.mp3"></audio>
+  <div class="countdown" id="countdown"></div>
+  <div class="gift-box" id="giftBox">
+    <div class="ribbon vertical"></div>
+    <div class="ribbon horizontal"></div>
+    <div class="heart">❤️</div>
   </div>
 
+  <audio id="bgMusic" src="45040.mp3"></audio>
+
   <script>
-    // ⚡ For testing, set countdown just 10 seconds from now
-    const testMode = true; // change to false for real date
-    let targetDate;
-    if (testMode) {
-      targetDate = new Date().getTime() + 10000; // 10 seconds from now
-    } else {
-      targetDate = new Date("Aug 19, 2025 22:11:00").getTime();
-    }
+    // Countdown Timer
+    const countdownEl = document.getElementById("countdown");
+    const targetDate = new Date("Aug 20, 2025 22:11:00").getTime();
 
-    const timerElement = document.getElementById("timer");
-    const openBtn = document.getElementById("openBtn");
-    const messageElement = document.getElementById("message");
-    const bgMusic = document.getElementById("bgMusic");
-
-    const countdown = setInterval(() => {
+    function updateCountdown() {
       const now = new Date().getTime();
       const distance = targetDate - now;
 
-      if (distance > 0) {
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-        timerElement.innerHTML =
-          `${days}d ${hours}h ${minutes}m ${seconds}s`;
-      } else {
-        clearInterval(countdown);
-        timerElement.innerHTML = "The moment is here!";
-        openBtn.style.display = "inline-block";
+      if (distance < 0) {
+        countdownEl.innerHTML = "🎉 Time’s up! Open your gift!";
+        return;
       }
-    }, 1000);
 
-    // On tap -> show message + play music
-    openBtn.addEventListener("click", () => {
-      messageElement.style.display = "block";
-      messageElement.innerText = 
-`On this day the stars align,
-To celebrate that you are mine,
-Your beauty shines, both bright and true,
-The world feels warmer because of you.
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-Your gentle nature, so calm and so sweet,
-Makes every moment feel complete,
-With every smile, with every care,
-You paint love’s colors everywhere.
+      countdownEl.innerHTML =
+        days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+    }
 
-Your beauty shines, both so bright and so true,
-The skies seem clearer because of you,
-A gentle heart, a caring soul,
-You make my half feel wholly whole.
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
 
-Your laughter’s music, so soft and so sweet,
-It makes my every day complete,
-With every smile, with every care,
-You paint love’s colors everywhere.
+    // Gift Box Opening
+    const giftBox = document.getElementById("giftBox");
+    const bgMusic = document.getElementById("bgMusic");
 
-So on your birthday, here’s my part,
-A wish that flows straight from my heart,
-May joy surround you, far and near,
-Not just today, but all the year,
-Forever you’ll mean the world to me.
-
-Forever blessed, I’ll always be,
-For love like this was meant for me,
-And as the candles softly glow,
-My endless love for you will grow`;
-
+    giftBox.addEventListener("click", () => {
+      giftBox.classList.add("opened");
       bgMusic.play();
-      openBtn.style.display = "none";
     });
   </script>
 </body>
