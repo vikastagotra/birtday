@@ -36,7 +36,6 @@
       position: relative;
       border-radius: 10px;
       box-shadow: 0 0 20px #ff66b2;
-      display: none;
       cursor: pointer;
     }
     .ribbon {
@@ -126,7 +125,7 @@
   <h1>🎉 Happy Birthday Cutie Putie Pie 💕</h1>
   <div id="countdown"></div>
 
-  <!-- Gift box -->
+  <!-- Gift box (always visible) -->
   <div class="gift-box" id="giftBox">
     <div class="ribbon"></div>
     <div class="heart"></div>
@@ -183,14 +182,13 @@ My endless love for you will grow. 💖
       if (diff <= 0) {
         clearInterval(timer);
         countdownEl.innerHTML = "🎉 It's Birthday Time! 🎉";
-        giftBox.style.display = "block";
 
-        // Auto-open after 2 sec
+        // Auto-open gift box
+        giftBox.classList.add('open');
         setTimeout(() => {
-          giftBox.classList.add('open');
           poem.style.display = 'block';
           audio.play();
-        }, 2000);
+        }, 1200);
 
       } else {
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
